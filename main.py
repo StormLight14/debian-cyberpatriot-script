@@ -6,8 +6,8 @@ import subprocess
 # update apt repos and install package upgrades
 os.system("sudo apt update && sudo apt upgrade")
 
-# enable auto update
-print("todo")
+# install unattended-upgrades and enable auto update
+os.system("sudo apt install unattended-upgrades")
 
 # install ufw (if it for some reason isnt installed already) and enable it
 os.system("sudo apt install ufw")
