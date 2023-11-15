@@ -3,6 +3,16 @@
 import os
 import subprocess
 
+if subprocess.getoutput("whoami") != "root":
+    print("WARNING: You are not running this script as root.")
+    run_anyway = input("Run script anyway? (y/n)").lower()
+
+    if run_anyway == "y" or run_anyway == "yes":
+        print("Running script.")
+    else:
+        print("Exiting.")
+        exit()
+
 # update apt repos and install package upgrades
 os.system("sudo apt update && sudo apt upgrade")
 
@@ -22,20 +32,23 @@ os.system("sudo updatedb")
 # search for media files, prompt whether to delete or not
 locate_output = (subprocess.getoutput("locate *.mp3") + subprocess.getoutput("locate *.mp4") + subprocess.getoutput("locate *.wav")).split("\n")
 for file in locate_output:
-    should_delete = input(f"Delete media file {file}? (y/n)").lower()
+    should_delete = input(f"Delete media file {file}? (y/n/stop)").lower()
     if should_delete == "y":
         print("Deleted media file.")
         os.remove(file)
+    elif should_delete == "stop":
+        print("Stopped going through media files.")
+        break
     elif should_delete == "n":
         print("Did not delete media file.")
     else:
         print("Invalid input; defaulted to not deleting.")
 
 # disable anonymous ftp login
-print("todo")
+os.system("sudo sed -i \"s/anonymous_enable=YES/anonymous_enable=NO/g\" /etc/vsftpd.conf")
 
 # enable ssl for ftp
-print("todo")
+os.system("sudo sed -i \"s/ssl_enable=NO/ssl_enable=YES/g\" /etc/vsftpd.conf")
 
 # set mininum password age
 print("todo")
