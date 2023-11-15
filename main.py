@@ -3,6 +3,7 @@
 import os
 import subprocess
 
+"""
 # update apt repos and install package upgrades
 os.system("sudo apt update && sudo apt upgrade")
 
@@ -18,9 +19,18 @@ os.system("sudo sed -i \"s/PermitRootLogin yes/PermitRootLogin no/g\" /etc/ssh/s
 
 # update db for locate command
 os.system("sudo updatedb")
+"""
 
 # search for media files, prompt whether to delete or not
-locate_output = subprocess.getoutput("locate *.mp3") + subprocess.getoutput("locate *.mp4")
+locate_output = (subprocess.getoutput("locate *.mp3") + subprocess.getoutput("locate *.mp4") + subprocess.getoutput("locate *.wav")).split("\n")
+for file in locate_output:
+    should_delete = input(f"Delete media file {file}? (y/n)").lower()
+    if should_delete == "y":
+        print("Deleted media file.")
+    elif should_delete == "n":
+        print("Did not delete media file.")
+    else:
+        print("Invalid input; defaulted to not deleting.")
 
 # disable anonymous ftp login
 print("todo")
