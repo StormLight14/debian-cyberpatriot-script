@@ -34,8 +34,11 @@ locate_output = (subprocess.getoutput("locate *.mp3") + "\n" + subprocess.getout
 for file in locate_output:
     should_delete = input(f"Delete media file {file}? (y/n/stop)").lower()
     if should_delete == "y":
-        print("Deleted media file.")
-        os.remove(file)
+        try:
+            print("Deleted media file.")
+            os.remove(file)
+        except:
+            print("Failed to delete media file, please try doing it manually.")
     elif should_delete == "stop":
         print("Stopped going through media files.")
         break
