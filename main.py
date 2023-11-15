@@ -30,7 +30,7 @@ os.system("sudo sed -i \"s/PermitRootLogin yes/PermitRootLogin no/g\" /etc/ssh/s
 os.system("sudo updatedb")
 
 # search for media files, prompt whether to delete or not
-locate_output = (subprocess.getoutput("locate *.mp3") + subprocess.getoutput("locate *.mp4") + subprocess.getoutput("locate *.wav")).split("\n")
+locate_output = (subprocess.getoutput("locate *.mp3") + "\n" + subprocess.getoutput("locate *.mp4") + "\n" + subprocess.getoutput("locate *.wav")).split("\n")
 for file in locate_output:
     should_delete = input(f"Delete media file {file}? (y/n/stop)").lower()
     if should_delete == "y":
