@@ -9,7 +9,7 @@ os.system("sudo apt update && sudo apt upgrade")
 # enable auto update
 print("todo")
 
-# install ufw (if it for some reason isnt) and enable it
+# install ufw (if it for some reason isnt installed already) and enable it
 os.system("sudo apt install ufw")
 os.system("sudo ufw enable")
 
