@@ -3,7 +3,6 @@
 import os
 import subprocess
 
-"""
 # update apt repos and install package upgrades
 os.system("sudo apt update && sudo apt upgrade")
 
@@ -19,7 +18,6 @@ os.system("sudo sed -i \"s/PermitRootLogin yes/PermitRootLogin no/g\" /etc/ssh/s
 
 # update db for locate command
 os.system("sudo updatedb")
-"""
 
 # search for media files, prompt whether to delete or not
 locate_output = (subprocess.getoutput("locate *.mp3") + subprocess.getoutput("locate *.mp4") + subprocess.getoutput("locate *.wav")).split("\n")
