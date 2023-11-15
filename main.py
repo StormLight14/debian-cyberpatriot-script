@@ -25,6 +25,7 @@ for file in locate_output:
     should_delete = input(f"Delete media file {file}? (y/n)").lower()
     if should_delete == "y":
         print("Deleted media file.")
+        os.remove(file)
     elif should_delete == "n":
         print("Did not delete media file.")
     else:
