@@ -1,4 +1,4 @@
-# Debian and Ubuntu shell script for CyberPatriot
+# Debian and Ubuntu script for CyberPatriot
 
 import os
 
@@ -12,8 +12,8 @@ print("todo")
 os.system("sudo apt install ufw")
 os.system("sudo ufw enable")
 
-# disable root ssh login
-print("todo")
+# disable root ssh login by replacing text in config
+os.system("sudo sed -i \"s/PermitRootLogin yes/PermitRootLogin no/g\" /etc/ssh/sshd_config")
 
 # search for media files, prompt whether to delete or not
 print("todo")
@@ -25,4 +25,3 @@ print("todo")
 print("todo")
 
 # set mininum password age
-print("todo")
