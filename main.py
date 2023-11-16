@@ -32,20 +32,21 @@ os.system("sudo updatedb")
 # search for media files, prompt whether to delete or not
 locate_output = (subprocess.getoutput("locate *.mp3") + "\n" + subprocess.getoutput("locate *.mp4") + "\n" + subprocess.getoutput("locate *.wav")).split("\n")
 for file in locate_output:
-    should_delete = input(f"Delete media file {file}? (y/n/stop)").lower()
-    if should_delete == "y":
-        try:
-            print("Deleted media file.")
-            os.remove(file)
-        except:
-            print("Failed to delete media file, please try doing it manually.")
-    elif should_delete == "stop":
-        print("Stopped going through media files.")
-        break
-    elif should_delete == "n":
-        print("Did not delete media file.")
-    else:
-        print("Invalid input; defaulted to not deleting.")
+    if file != '':
+        should_delete = input(f"Delete media file {file}? (y/n/stop)").lower()
+        if should_delete == "y":
+            try:
+                print("Deleted media file.")
+                os.remove(file)
+            except:
+                print("Failed to delete media file, please try doing it manually.")
+        elif should_delete == "stop":
+            print("Stopped going through media files.")
+            break
+        elif should_delete == "n":
+            print("Did not delete media file.")
+        else:
+            print("Invalid input; defaulted to not deleting.")
 
 # disable anonymous ftp login
 os.system("sudo sed -i \"s/anonymous_enable=YES/anonymous_enable=NO/g\" /etc/vsftpd.conf")
