@@ -62,7 +62,7 @@ print("Enabled vsftpd ssl_enable")
 # remember previous passwords and extra dictionary-based strength tests added
 common_password_lines = []
 
-with open("etc/pam.d/common-password") as common_password_file:
+with open("/etc/pam.d/common-password") as common_password_file:
     for line in common_password_file.readlines():
         common_password_lines.append(line)
 
