@@ -132,13 +132,6 @@ with open('/etc/passwd', 'r') as passwd_file:
                 else:
                     users.append(user_name, false, false))
 
-# read authorized_users.txt and append to auth_users list
-try:
-    with open('authorized-users.txt', 'r') as authorized_users:
-        for user in authorized_users.readlines():
-            auth_users_names.append(user.strip())
-except:
-    print("ERROR: Failed to read authorized-users.txt; it may not exist.")
 
 # set good password aging policies for current users
 """ DISABLED UNTIL FIXED, because I ended up soft locking sudo authentication after running it...
@@ -155,7 +148,8 @@ for user in users:
     if user.is_authorized == False:
         remove_user = input(f"Remove user {auth_user}? They are not in authorized_users.txt. WARNING: Double check before answering! (y/n) ").lower()
         if remove_user == "y" or remove_user == "yes":
-            pass # remove user here
+            os.system(f"sudo userdel {user}")
+            print(f"Removed user {user}")
         elif remove_user == "n" or remove_user == "no":
             print("Not removing user.")
         else:
