@@ -110,14 +110,27 @@ except:
 
 # get all users on system, and authorized users from authorized-users.txt.
 users = []
-auth_users_names = []
 
 # awk -F':' '/sudo/{print $4}' /etc/group for getting list of users in sudo group
 # get all users on system and append to users list
 with open('/etc/passwd', 'r') as passwd_file:
-    for line in passwd_file.readlines():
-        if "/home/" in line: # only have actual users
-            users.append(User(line.split(":")[0], false)) # args: user's name; is in group
+    with open('authorized-users.txt', 'r') as authorized_users:
+        auth_user_names = []
+        sudo_users = subprocess.getoutput("awk -F\':\' \'/sudo/{print $4}\' /etc/group")
+        
+        for line in authorized_users.readlines():
+            if line.strip() == "DISABLED":
+                auth_users_names.append("DISABLED")
+                break
+            auth_users_names.append(line.strip())
+            
+        for line in passwd_file.readlines():
+            if "/home/" in line: # only have actual users
+                user_name = line.split(":")[0]
+                if user_name in auth_users_names or auth_users_names[0] == "DISABLED":
+                    users.append(user_name, true, false)) # args: user's name; is authorized; is in sudo group
+                else:
+                    users.append(user_name, false, false))
 
 # read authorized_users.txt and append to auth_users list
 try:
@@ -138,9 +151,9 @@ for user in users:
 """
 
 # check if any users are unauthorized on the system and ask whether to delete or not
-for auth_user_name in auth_users_names:
-    if auth_user_name != "DISABLED":
-        if auth_user not in auth_users:
+for auth_user in auth_users:
+    if auth_user != "DISABLED":
+        if auth_user not in u:
             remove_user = input(f"Remove user {auth_user}? They are not in authorized_users.txt. WARNING: Double check before answering! (y/n) ").lower()
             if remove_user == "y" or remove_user == "yes":
                 pass # remove user here
