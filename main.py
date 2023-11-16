@@ -91,7 +91,7 @@ try:
         lines = logindefs_file.readlines()
         
         # iterate through lines in login.defs and set different values.
-        for i, line in enumerate(lines): 
+        for i, line in enumerate(lines):
             if line.startswith("PASS_MAX_DAYS"):
                 lines[i] = "PASS_MAX_DAYS 90\n"
             elif line.startswith("PASS_MIN_DAYS"):
@@ -110,7 +110,7 @@ except:
 
 # get all users on system, and authorized users from authorized-users.txt.
 users = []
-auth_users = []
+auth_users_names = []
 
 # awk -F':' '/sudo/{print $4}' /etc/group for getting list of users in sudo group
 # get all users on system and append to users list
@@ -123,12 +123,12 @@ with open('/etc/passwd', 'r') as passwd_file:
 try:
     with open('authorized-users.txt', 'r') as authorized_users:
         for user in authorized_users.readlines():
-            auth_users.append(user.strip())
+            auth_users_names.append(user.strip())
 except:
     print("ERROR: Failed to read authorized-users.txt; it may not exist.")
 
 # set good password aging policies for current users
-""" DISABLED UNTIL FIXED, because I ended up soft locking sudo authentication after running it, and this doesn't seem required.
+""" DISABLED UNTIL FIXED, because I ended up soft locking sudo authentication after running it...
 for user in users:
     if user != "root" and user != "main_user":
         os.system(f"sudo chage --mindays 7 --maxdays 90 --warndays 5 {user}")
@@ -138,8 +138,8 @@ for user in users:
 """
 
 # check if any users are unauthorized on the system and ask whether to delete or not
-for auth_user in auth_users:
-    if auth_user != "DISABLED":
+for auth_user_name in auth_users_names:
+    if auth_user_name != "DISABLED":
         if auth_user not in auth_users:
             remove_user = input(f"Remove user {auth_user}? They are not in authorized_users.txt. WARNING: Double check before answering! (y/n) ").lower()
             if remove_user == "y" or remove_user == "yes":
