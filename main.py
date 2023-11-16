@@ -154,22 +154,22 @@ for user in users:
 # check if any users are unauthorized on the system and ask whether to delete or not
 for user in users:
     if user.is_authorized == False:
-        remove_user = input(f"Remove user {user}? They are not in authorized_users.txt. WARNING: Double check before answering! (y/n) ").lower()
+        remove_user = input(f"Remove user {user.username}? They are not in authorized_users.txt. WARNING: Double check before answering! (y/n) ").lower()
         if remove_user == "y" or remove_user == "yes":
-            os.system(f"sudo userdel {user}")
-            print(f"Removed user {user}")
+            os.system(f"sudo userdel {user.username}")
+            print(f"Removed user {user.username}")
         elif remove_user == "n" or remove_user == "no":
             print("Not removing user.")
         else:
             print("Invalid input; defaulting to not removing user.")
 
     if user.has_sudo:
-        remove_sudo = input(f"Remove user {user} from sudo group? Check the administrator list. (y/n)").lower()
+        remove_sudo = input(f"Remove user {user.username} from sudo group? Check the administrator list. (y/n)").lower()
         if remove_sudo == "y" or remove_sudo == "yes":
             os.system("gpasswd --delete {user} sudo")
-            print("Removed {user} from sudo group.")
+            print(f"Removed {user.username} from sudo group.")
         else:
-            print(f"Did not remove {user} from sudo.")
+            print(f"Did not remove {user.username} from sudo.")
 
 # ensure /etc/shadow has correct file permissions.
 # owner has rw, owner's group has r, all others have none.
