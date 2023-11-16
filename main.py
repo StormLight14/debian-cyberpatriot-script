@@ -13,7 +13,8 @@ if subprocess.getoutput("whoami") != "root":
         print("Exiting.")
         exit()
 
-main_user = input("Who is the main user? (ex: perry in the training rounds): ")
+# main_user = input("Who is the main user? (ex: perry in the training rounds): ")
+# ^^^^ UNCOMMENT IF SETTING PASSWORD POLICIES ON CURRENT USERS GETS UNCOMMENTED
 
 # update apt repos and install package upgrades
 os.system("sudo apt update && sudo apt upgrade")
@@ -152,3 +153,11 @@ for auth_user in auth_users:
 # ensure /etc/shadow has correct file permissions.
 # owner has rw, owner's group has r, all others have none.
 os.system("sudo chmod 640 /etc/shadow")
+
+# ask user whether to disable ipv4 forwarding or not
+disable_ip_forward = input("Disable IPv4 Forwarding? You can always change this later in /etc/sysctl.conf (y/n) ").lower()
+if disable_ip_forward == "y" or disable_ip_forward == "yes":
+    os.system("sudo sed -i \"s/net.ipv4.ip_forward=1/net.ipv4.ip_forward=0/g\" /etc/sysctl.conf")
+    print("Disabled IPv4 forwarding.")
+else:
+    print("Leaving IPv4 forwarding settings at default.")
