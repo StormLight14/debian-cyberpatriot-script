@@ -84,4 +84,7 @@ with open('/etc/passwd', 'r') as passwd_file:
     for line in passwd_file.readlines():
         users.append(line.split(":")[0]) # only take user's name from /etc/passwd
 
-print(users)
+for user in users:
+    os.system(f"sudo chage --mindays 7 --maxdays 90 --warndays 5 {user}")
+
+print("Set system password aging policies for current users.")
