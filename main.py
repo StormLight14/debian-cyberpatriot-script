@@ -23,7 +23,7 @@ os.system("sudo apt update && sudo apt upgrade")
 
 # install unattended-upgrades and enable auto update
 os.system("sudo apt install unattended-upgrades")
-#TODO
+# !TODO!
 
 # install and enable ufw
 os.system("sudo apt install ufw")
