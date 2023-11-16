@@ -66,6 +66,7 @@ with open("/etc/pam.d/common-password", "a+") as commonpassword_file:
 
     for line in commonpassword_file.readlines():
         if "password" in line:
+            print("PASSWORD IN LINE")
             if "requisite" in line and "pam_pwquality" in line:
                 change_dictionary_checks = False
             if "required" in line and "pam_unix" in line:
