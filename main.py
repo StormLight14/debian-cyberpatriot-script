@@ -59,9 +59,15 @@ print("Disabled vsftpd anonymous_enable")
 os.system("sudo sed -i \"s/ssl_enable=NO/ssl_enable=YES/g\" /etc/vsftpd.conf")
 print("Enabled vsftpd ssl_enable")
 
+# remember previous passwords and extra dictionary-based strength tests added
+os.system("sudo sed -i \"s/anon/anonymous_enable=NO/g\" /etc/pam.d/common-password")
+with open("/etc/pam.d/common-password", "a") as commonpassword_file:
+    commonpassword_file.write("password requisite pam_pwquality.so")
+    commonpassword_file.write("password required pam_unix.so remember=5")
+
 # set good password aging policies for future users
-with open('/etc/login.defs', 'r') as file:
-    lines = file.readlines()
+with open('/etc/login.defs', 'r') as logindefs_file:
+    lines = logindefs_file.readlines()
     
     # iterate through lines in login.defs
     for i, line in enumerate(lines): 
@@ -88,3 +94,5 @@ for user in users:
     os.system(f"sudo chage --mindays 7 --maxdays 90 --warndays 5 {user}")
 
 print("Set system password aging policies for current users.")
+
+# check if any users are unauthorized on the system and ask whether to delete or not
