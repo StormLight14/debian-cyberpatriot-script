@@ -166,7 +166,7 @@ for user in users:
     if user.has_sudo:
         remove_sudo = input(f"Remove user {user.username} from sudo group? Check the administrator list. (y/n)").lower()
         if remove_sudo == "y" or remove_sudo == "yes":
-            os.system("gpasswd --delete {user} sudo")
+            os.system("sudo deluser {user} sudo")
             print(f"Removed {user.username} from sudo group.")
         else:
             print(f"Did not remove {user.username} from sudo.")
