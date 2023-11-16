@@ -124,7 +124,8 @@ except:
 
 # set good password aging policies for current users
 for user in users:
-    os.system(f"sudo chage --mindays 7 --maxdays 90 --warndays 5 {user}")
+    if user != "root":
+        os.system(f"sudo chage --mindays 7 --maxdays 90 --warndays 5 {user}")
 
 print("Set system password aging policies for current users.")
 
