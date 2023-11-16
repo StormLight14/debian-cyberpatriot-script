@@ -18,11 +18,17 @@ os.system("sudo apt update && sudo apt upgrade")
 
 # install unattended-upgrades and enable auto update
 os.system("sudo apt install unattended-upgrades")
+#TODO
 
-# install ufw (if it for some reason isnt installed already) and enable it
+# install and enable ufw
 os.system("sudo apt install ufw")
 os.system("sudo ufw enable")
 print("UFW is installed and enabled.")
+
+# install, start and enable ssh
+os.system("sudo apt install openssh-server")
+os.system("sudo systemctl enable sshd")
+os.system("sudo systemctl start sshd")
 
 # disable root ssh login by replacing text in config
 os.system("sudo sed -i \"s/PermitRootLogin yes/PermitRootLogin no/g\" /etc/ssh/sshd_config")
@@ -60,54 +66,38 @@ os.system("sudo sed -i \"s/ssl_enable=NO/ssl_enable=YES/g\" /etc/vsftpd.conf")
 print("Enabled vsftpd ssl_enable")
 
 # remember previous passwords and extra dictionary-based strength tests added
-common_password_lines = []
-
-with open("/etc/pam.d/common-password") as common_password_file:
-    for line in common_password_file.readlines():
-        common_password_lines.append(line)
-
-with open("/etc/pam.d/common-password", "a+") as common_password_file:
-    change_dictionary_checks = True 
-    change_password_remember = True
-
-    for line in common_password_lines:
-        if "password" in line:
-            if "requisite" in line and "pam_pwquality" in line:
-                change_dictionary_checks = False
-            if "required" in line and "pam_unix" in line:
-                change_password_remember = False
-    
-    if change_dictionary_checks:
+try:
+    with open("/etc/pam.d/common-password", "a+") as common_password_file:
         common_password_file.write("\npassword requisite pam_pwquality.so\n")
         print("Set better password strength (Extra dictionary-based checks)")
-    else:
-        print("Password strength already good. (Most likely; still recommend manually checking /etc/pam.d/common-password)")
-
-    if change_password_remember:
-        common_password_file.write("\npassword required pam_unix.so remember=5\n")
-        print("Set remembering past passwords.")
-    else:
-        print("Past passwords already set to be remembered (Most likely; still recommend manually checking /etc/pam.d/common-password)")
+        print("Set setting for remembering past passwords.")
+        print("WARNING: Please check /etc/pam.d/common-password for any conflicts this may have made.")
+except:
+    print("ERROR: Failed to edit /etc/pam.d/common-password; it may not exist.")
 
 
 # set good password aging policies for future users
-with open('/etc/login.defs', 'r') as logindefs_file:
-    lines = logindefs_file.readlines()
-    
-    # iterate through lines in login.defs
-    for i, line in enumerate(lines): 
-        if line.startswith("PASS_MAX_DAYS"):
-            lines[i] = "PASS_MAX_DAYS 90\n"
-        elif line.startswith("PASS_MIN_DAYS"):
-            lines[i] = "PASS_MIN_DAYS 7\n"
-        elif line.startswith("PASS_WARN_AGE"):
-            lines[i] = "PASS_WARN_AGE 5\n"
+try:
+    with open('/etc/login.defs', 'r') as logindefs_file:
+        lines = logindefs_file.readlines()
+        
+        # iterate through lines in login.defs
+        for i, line in enumerate(lines): 
+            if line.startswith("PASS_MAX_DAYS"):
+                lines[i] = "PASS_MAX_DAYS 90\n"
+            elif line.startswith("PASS_MIN_DAYS"):
+                lines[i] = "PASS_MIN_DAYS 7\n"
+            elif line.startswith("PASS_WARN_AGE"):
+                lines[i] = "PASS_WARN_AGE 5\n"
 
-    # write changes to login.defs
-    with open('/etc/login.defs', 'w') as file:
-        file.writelines(lines)
+        # write changes to login.defs
+        with open('/etc/login.defs', 'w') as file:
+            file.writelines(lines)
+        print("Set system password aging policies for future users.")
 
-print("Set system password aging policies for future users.")
+except:
+    print("ERROR: Failed to read/write /etc/login.defs")
+
 
 # get all users on system, and authorized users from authorized-users.txt.
 users = []
@@ -121,9 +111,12 @@ with open('/etc/passwd', 'r') as passwd_file:
             users.append(line.split(":")[0]) # only take user's name from /etc/passwd
 
 # read authorized_users.txt and append to auth_users list
-with open('authorized-users.txt', 'r') as authorized_users:
-    for user in authorized_users.readlines():
-        auth_users.append(user.strip())
+try:
+    with open('authorized-users.txt', 'r') as authorized_users:
+        for user in authorized_users.readlines():
+            auth_users.append(user.strip())
+except:
+    print("ERROR: Failed to read authorized-users.txt; it may not exist.")
 
 # set good password aging policies for current users
 for user in users:
