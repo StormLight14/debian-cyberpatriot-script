@@ -31,9 +31,13 @@ os.system("sudo ufw enable")
 print("UFW is installed and enabled.")
 
 # install, start and enable ssh
-os.system("sudo apt install openssh-server")
-os.system("sudo systemctl enable sshd")
-os.system("sudo systemctl start sshd")
+enable_ssh = input("Enable SSH? (y/n) ").lower()
+if enable_ssh == "y" or enable_ssh == "yes":
+    os.system("sudo apt install openssh-server")
+    os.system("sudo systemctl enable sshd")
+    os.system("sudo systemctl start sshd")
+else:
+    print("Not enabling SSH.")
 
 # disable root ssh login by replacing text in config
 os.system("sudo sed -i \"s/PermitRootLogin yes/PermitRootLogin no/g\" /etc/ssh/sshd_config")
