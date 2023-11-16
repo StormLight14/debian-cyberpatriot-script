@@ -64,19 +64,19 @@ with open("/etc/pam.d/common-password", "a+") as commonpassword_file:
     (change_dictionary_checks, change_password_remember) = (True, True)
     for line in commonpassword_file.readlines():
         if "password" in line:
-            if "requisite" in line and "pam_pwquality.so" in line:
+            if "requisite" in line and "pam_pwquality" in line:
                 change_dictionary_checks = False
-            if "required" in line and "pam_unix.so" in line:
+            if "required" in line and "pam_unix" in line:
                 change_password_remember = False
     
     if change_dictionary_checks:
-        commonpassword_file.write("password requisite pam_pwquality.so")
+        commonpassword_file.write("\npassword requisite pam_pwquality.so\n")
         print("Set better password strength (Extra dictionary-based checks)")
     else:
         print("Password strength already good. (Most likely; still recommend manually checking.)")
 
     if change_password_remember:
-        commonpassword_file.write("password required pam_unix.so remember=5")
+        commonpassword_file.write("\npassword required pam_unix.so remember=5\n")
         print("Set remembering past passwords.")
     else:
         print("Past passwords already set to be remembered (Most likely; still recommend manually checking.)")
