@@ -61,7 +61,9 @@ print("Enabled vsftpd ssl_enable")
 
 # remember previous passwords and extra dictionary-based strength tests added
 with open("/etc/pam.d/common-password", "a+") as commonpassword_file:
-    (change_dictionary_checks, change_password_remember) = (True, True)
+    change_dictionary_checks = True 
+    change_password_remember = True
+
     for line in commonpassword_file.readlines():
         if "password" in line:
             if "requisite" in line and "pam_pwquality" in line:
