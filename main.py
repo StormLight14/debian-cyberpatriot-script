@@ -115,12 +115,11 @@ except:
 # get all users on system, and authorized users from authorized-users.txt.
 users = []
 
-# awk -F':' '/sudo/{print $4}' /etc/group for getting list of users in sudo group
 # get all users on system and append to users list
 with open('/etc/passwd', 'r') as passwd_file:
     with open('authorized-users.txt', 'r') as authorized_users:
         auth_user_names = []
-        sudo_users = subprocess.getoutput("awk -F\':\' \'/sudo/{print $4}\' /etc/group")
+        sudo_users = subprocess.getoutput("getent group sudo | awk -F: '{print $1 \":\" $NF}'") # list all sudo users
         
         for line in authorized_users.readlines():
             if line.strip() == "DISABLED":
@@ -131,10 +130,15 @@ with open('/etc/passwd', 'r') as passwd_file:
         for line in passwd_file.readlines():
             if "/home/" in line: # only have actual users
                 user_name = line.split(":")[0]
+                user_is_authed = False
+                user_has_sudo = False
+
                 if user_name in auth_user_names or auth_user_names[0] == "DISABLED":
-                    users.append(User(user_name, True, False))
-                else:
-                    users.append(User(user_name, False, False))
+                    user_is_authed = True
+                if user_name in sudo_users:
+                    user_has_sudo = True
+
+                users.append(User(user_name, user_is_authed, user_has_sudo))
 
 
 # set good password aging policies for current users
@@ -158,6 +162,14 @@ for user in users:
             print("Not removing user.")
         else:
             print("Invalid input; defaulting to not removing user.")
+
+    if user.has_sudo:
+        remove_sudo = input(f"Remove user {user} from sudo group? Check the administrator list. (y/n)").lower()
+        if remove_sudo == "y" or remove_sudo == "yes":
+            os.system("gpasswd --delete {user} sudo")
+            print("Removed {user} from sudo group.")
+        else:
+            print(f"Did not remove {user} from sudo.")
 
 # ensure /etc/shadow has correct file permissions.
 # owner has rw, owner's group has r, all others have none.
