@@ -126,7 +126,7 @@ except:
     print("ERROR: Failed to read authorized-users.txt; it may not exist.")
 
 # set good password aging policies for current users
-""" DISABLED TEMPORARILY
+""" DISABLED UNTIL FIXED, because I ended up soft locking sudo authentication after running it, and this doesn't seem required.
 for user in users:
     if user != "root" and user != "main_user":
         os.system(f"sudo chage --mindays 7 --maxdays 90 --warndays 5 {user}")
