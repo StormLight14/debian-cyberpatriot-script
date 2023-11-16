@@ -43,7 +43,7 @@ for file in locate_output:
                 os.remove(file)
             except:
                 print("Failed to delete media file, please try doing it manually.")
-        elif should_delete == "stop":
+        elif should_delete == "stop" or should_delete == "s":
             print("Stopped going through media files.")
             break
         elif should_delete == "n":
@@ -60,8 +60,7 @@ os.system("sudo sed -i \"s/ssl_enable=NO/ssl_enable=YES/g\" /etc/vsftpd.conf")
 print("Enabled vsftpd ssl_enable")
 
 # remember previous passwords and extra dictionary-based strength tests added
-os.system("sudo sed -i \"s/anon/anonymous_enable=NO/g\" /etc/pam.d/common-password")
-with open("/etc/pam.d/common-password", "a") as commonpassword_file:
+with open("/etc/pam.d/common-password", "a+") as commonpassword_file:
     (change_dictionary_checks, change_password_remember) = (True, True)
     for line in commonpassword_file.readlines():
         if "password" in line:
@@ -98,8 +97,11 @@ with open('/etc/login.defs', 'r') as logindefs_file:
 
 print("Set system password aging policies for future users.")
 
-# set good password aging policies for current users
+# get all users on system, and authorized users from authorized-users.txt.
 users = []
+auth_users = []
+
+# set good password aging policies for current users
 with open('/etc/passwd', 'r') as passwd_file:
     for line in passwd_file.readlines():
         users.append(line.split(":")[0]) # only take user's name from /etc/passwd
