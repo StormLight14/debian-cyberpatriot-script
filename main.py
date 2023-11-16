@@ -123,7 +123,7 @@ with open('/etc/passwd', 'r') as passwd_file:
 # read authorized_users.txt and append to auth_users list
 with open('authorized-users.txt', 'r') as authorized_users:
     for user in authorized_users.readlines():
-        auth_users.append(user)
+        auth_users.append(user.strip())
 
 # set good password aging policies for current users
 for user in users:
