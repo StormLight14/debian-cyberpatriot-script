@@ -121,8 +121,8 @@ with open('/etc/passwd', 'r') as passwd_file:
             users.append(line.split(":")[0]) # only take user's name from /etc/passwd
 
 # read authorized_users.txt and append to auth_users list
-if os.stat("./authorized_users.txt").st_size != 0: # authorized-users.txt isnt empty
-    with open('./authorized-users.txt', 'r') as authorized_users:
+if os.stat("authorized_users.txt").st_size != 0: # authorized-users.txt isnt empty
+    with open('authorized-users.txt', 'r') as authorized_users:
         for user in authorized_users.readlines():
             auth_users.append(user)
 
