@@ -60,11 +60,17 @@ os.system("sudo sed -i \"s/ssl_enable=NO/ssl_enable=YES/g\" /etc/vsftpd.conf")
 print("Enabled vsftpd ssl_enable")
 
 # remember previous passwords and extra dictionary-based strength tests added
-with open("/etc/pam.d/common-password", "a+") as commonpassword_file:
+common_password_lines = []
+
+with open("etc/pam.d/common-password") as common_password_file:
+    for line in common_password_file.readlines():
+        common_password_lines.append(line)
+
+with open("/etc/pam.d/common-password", "a+") as common_password_file:
     change_dictionary_checks = True 
     change_password_remember = True
 
-    for line in commonpassword_file.readlines():
+    for line in common_password_lines:
         if "password" in line:
             print("PASSWORD IN LINE")
             if "requisite" in line and "pam_pwquality" in line:
@@ -73,13 +79,13 @@ with open("/etc/pam.d/common-password", "a+") as commonpassword_file:
                 change_password_remember = False
     
     if change_dictionary_checks:
-        commonpassword_file.write("\npassword requisite pam_pwquality.so\n")
+        common_password_file.write("\npassword requisite pam_pwquality.so\n")
         print("Set better password strength (Extra dictionary-based checks)")
     else:
         print("Password strength already good. (Most likely; still recommend manually checking.)")
 
     if change_password_remember:
-        commonpassword_file.write("\npassword required pam_unix.so remember=5\n")
+        common_password_file.write("\npassword required pam_unix.so remember=5\n")
         print("Set remembering past passwords.")
     else:
         print("Past passwords already set to be remembered (Most likely; still recommend manually checking.)")
