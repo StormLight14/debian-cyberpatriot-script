@@ -1,1 +1,2 @@
 DISABLED
+Remember to add both administrators and normal users to this list, and delete these first two lines.
