@@ -62,8 +62,22 @@ print("Enabled vsftpd ssl_enable")
 # remember previous passwords and extra dictionary-based strength tests added
 os.system("sudo sed -i \"s/anon/anonymous_enable=NO/g\" /etc/pam.d/common-password")
 with open("/etc/pam.d/common-password", "a") as commonpassword_file:
-    commonpassword_file.write("password requisite pam_pwquality.so")
-    commonpassword_file.write("password required pam_unix.so remember=5")
+    (change_dictionary_checks, change_password_remember) = (True, True)
+    for line in commonpassword_file.readlines():
+        if "password" in line:
+            if "requisite" in line and "pam_pwquality.so" in line:
+                change_dictionary_checks = False
+            if "required" in line and "pam_unix.so" in line:
+                change_password_remember = False
+    
+    if change_dictionary_checks:
+        commonpassword_file.write("password requisite pam_pwquality.so")
+        print("Set better password strength (Extra dictionary-based checks)")
+
+    if change_password_remember:
+        commonpassword_file.write("password required pam_unix.so remember=5")
+        print("Set remembering past passwords.")
+
 
 # set good password aging policies for future users
 with open('/etc/login.defs', 'r') as logindefs_file:
