@@ -65,6 +65,10 @@ print("Disabled vsftpd anonymous_enable")
 os.system("sudo sed -i \"s/ssl_enable=NO/ssl_enable=YES/g\" /etc/vsftpd.conf")
 print("Enabled vsftpd ssl_enable")
 
+# require sudo to authenticate
+os.system("sudo sed -i \"s/!authenticate/authenticate/g\" /etc/sudoers")
+print("Enabled sudo requiring authentication.\nWARNING: Double check /etc/sudoers anyway.")
+
 # remember previous passwords and extra dictionary-based strength tests added
 try:
     with open("/etc/pam.d/common-password", "a+") as common_password_file:
@@ -81,7 +85,7 @@ try:
     with open('/etc/login.defs', 'r') as logindefs_file:
         lines = logindefs_file.readlines()
         
-        # iterate through lines in login.defs
+        # iterate through lines in login.defs and set different values.
         for i, line in enumerate(lines): 
             if line.startswith("PASS_MAX_DAYS"):
                 lines[i] = "PASS_MAX_DAYS 90\n"
@@ -128,7 +132,7 @@ print("Set system password aging policies for current users.")
 for auth_user in auth_users:
     if auth_user != "DISABLED":
         if auth_user not in auth_users:
-            remove_user = input(f"Remove user {auth_user}? They are not in authorized_users.txt. (WARNING: Double check before answering!) (y/n)").lower()
+            remove_user = input(f"Remove user {auth_user}? They are not in authorized_users.txt. WARNING: Double check before answering! (y/n)").lower()
             if remove_user == "y" or remove_user == "yes":
                 pass # remove user here
             elif remove_user == "n" or remove_user == "no":
@@ -138,3 +142,7 @@ for auth_user in auth_users:
     else:
         print("authorized-users.txt is set to DISABLED. Not checking users.")
         break
+
+# ensure /etc/shadow has correct file permissions.
+# owner has rw, owner's group has r, all others have none.
+os.system("sudo chmod 640 /etc/shadow")
