@@ -5,13 +5,15 @@ import subprocess
 
 if subprocess.getoutput("whoami") != "root":
     print("WARNING: You are not running this script as root.")
-    run_anyway = input("Run script anyway? (y/n)").lower()
+    run_anyway = input("Run script anyway? (y/n) ").lower()
 
     if run_anyway == "y" or run_anyway == "yes":
         print("Running script.")
     else:
         print("Exiting.")
         exit()
+
+main_user = input("Who is the main user? (ex: perry in the training rounds): ")
 
 # update apt repos and install package upgrades
 os.system("sudo apt update && sudo apt upgrade")
@@ -42,7 +44,7 @@ print("Updated file name database.")
 locate_output = (subprocess.getoutput("locate *.mp3") + "\n" + subprocess.getoutput("locate *.mp4") + "\n" + subprocess.getoutput("locate *.wav")).split("\n")
 for file in locate_output:
     if file != '':
-        should_delete = input(f"Delete media file {file}? (y/n/stop)").lower()
+        should_delete = input(f"Delete media file {file}? (y/n/stop) ").lower()
         if should_delete == "y":
             try:
                 print("Deleted media file.")
@@ -123,17 +125,20 @@ except:
     print("ERROR: Failed to read authorized-users.txt; it may not exist.")
 
 # set good password aging policies for current users
+""" DISABLED TEMPORARILY
 for user in users:
-    if user != "root":
+    if user != "root" and user != "main_user":
         os.system(f"sudo chage --mindays 7 --maxdays 90 --warndays 5 {user}")
 
-print("Set system password aging policies for current users.")
+    print("Set system password aging policies for current users.")
+
+"""
 
 # check if any users are unauthorized on the system and ask whether to delete or not
 for auth_user in auth_users:
     if auth_user != "DISABLED":
         if auth_user not in auth_users:
-            remove_user = input(f"Remove user {auth_user}? They are not in authorized_users.txt. WARNING: Double check before answering! (y/n)").lower()
+            remove_user = input(f"Remove user {auth_user}? They are not in authorized_users.txt. WARNING: Double check before answering! (y/n) ").lower()
             if remove_user == "y" or remove_user == "yes":
                 pass # remove user here
             elif remove_user == "n" or remove_user == "no":
