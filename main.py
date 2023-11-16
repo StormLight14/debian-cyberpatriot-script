@@ -121,10 +121,9 @@ with open('/etc/passwd', 'r') as passwd_file:
             users.append(line.split(":")[0]) # only take user's name from /etc/passwd
 
 # read authorized_users.txt and append to auth_users list
-if os.stat("authorized-users.txt").st_size != 0: # authorized-users.txt isnt empty
-    with open('authorized-users.txt', 'r') as authorized_users:
-        for user in authorized_users.readlines():
-            auth_users.append(user)
+with open('authorized-users.txt', 'r') as authorized_users:
+    for user in authorized_users.readlines():
+        auth_users.append(user)
 
 # set good password aging policies for current users
 for user in users:
@@ -133,12 +132,16 @@ for user in users:
 print("Set system password aging policies for current users.")
 
 # check if any users are unauthorized on the system and ask whether to delete or not
-for user in users:
-    if user not in auth_users:
-        remove_user = input(f"Remove user {user}? They are not in authorized_users.txt. (WARNING: Double check before answering!) (y/n)").lower()
-        if remove_user == "y" or remove_user == "yes":
-            pass # remove user here
-        elif remove_user == "n" or remove_user == "no":
-            print("Not removing user.")
-        else:
-            print("Invalid input; defaulting to not removing user.")
+for auth_user in auth_users:
+    if auth_user != "DISABLED":
+        if auth_user not in auth_users:
+            remove_user = input(f"Remove user {user}? They are not in authorized_users.txt. (WARNING: Double check before answering!) (y/n)").lower()
+            if remove_user == "y" or remove_user == "yes":
+                pass # remove user here
+            elif remove_user == "n" or remove_user == "no":
+                print("Not removing user.")
+            else:
+                print("Invalid input; defaulting to not removing user.")
+    else:
+        print("authorized-users.txt is set to DISABLED. Not checking users.")
+        break
