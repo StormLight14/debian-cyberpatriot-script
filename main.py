@@ -59,7 +59,7 @@ print("Disabled vsftpd anonymous_enable")
 os.system("sudo sed -i \"s/ssl_enable=NO/ssl_enable=YES/g\" /etc/vsftpd.conf")
 print("Enabled vsftpd ssl_enable")
 
-# set good password aging policies
+# set good password aging policies for future users
 with open('/etc/login.defs', 'r') as file:
     lines = file.readlines()
     
@@ -76,4 +76,12 @@ with open('/etc/login.defs', 'r') as file:
     with open('/etc/login.defs', 'w') as file:
         file.writelines(lines)
 
-print("Set system password aging policies.")
+print("Set system password aging policies for future users.")
+
+# set good password aging policies for current users
+users = []
+with open('/etc/passwd', 'r') as passwd_file:
+    for line in passwd_file.readlines():
+        users.append(line.split(":")[0]) # only take user's name from /etc/passwd
+
+print(users)
