@@ -3,6 +3,8 @@
 import os
 import subprocess
 
+from user import User
+
 if subprocess.getoutput("whoami") != "root":
     print("WARNING: You are not running this script as root.")
     run_anyway = input("Run script anyway? (y/n) ").lower()
@@ -136,6 +138,7 @@ for user in users:
 """
 
 # check if any users are unauthorized on the system and ask whether to delete or not
+# awk -F':' '/sudo/{print $4}' /etc/group for getting list of users in sudo group
 for auth_user in auth_users:
     if auth_user != "DISABLED":
         if auth_user not in auth_users:
