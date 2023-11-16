@@ -124,17 +124,17 @@ with open('/etc/passwd', 'r') as passwd_file:
         
         for line in authorized_users.readlines():
             if line.strip() == "DISABLED":
-                auth_users_names.append("DISABLED")
+                auth_user_names.append("DISABLED")
                 break
-            auth_users_names.append(line.strip())
+            auth_user_names.append(line.strip())
             
         for line in passwd_file.readlines():
             if "/home/" in line: # only have actual users
                 user_name = line.split(":")[0]
-                if user_name in auth_users_names or auth_users_names[0] == "DISABLED":
-                    users.append(user_name, true, false)) # args: user's name; is authorized; is in sudo group
+                if user_name in auth_user_names or auth_user_names[0] == "DISABLED":
+                    users.append(User(user_name, True, False))
                 else:
-                    users.append(user_name, false, false))
+                    users.append(User(user_name, False, False))
 
 
 # set good password aging policies for current users
@@ -150,7 +150,7 @@ for user in users:
 # check if any users are unauthorized on the system and ask whether to delete or not
 for user in users:
     if user.is_authorized == False:
-        remove_user = input(f"Remove user {auth_user}? They are not in authorized_users.txt. WARNING: Double check before answering! (y/n) ").lower()
+        remove_user = input(f"Remove user {user}? They are not in authorized_users.txt. WARNING: Double check before answering! (y/n) ").lower()
         if remove_user == "y" or remove_user == "yes":
             os.system(f"sudo userdel {user}")
             print(f"Removed user {user}")
