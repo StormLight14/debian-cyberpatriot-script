@@ -14,7 +14,7 @@ if subprocess.getoutput("whoami") != "root":
         exit()
 
 # main_user = input("Who is the main user? (ex: perry in the training rounds): ")
-# ^^^^ UNCOMMENT IF SETTING PASSWORD POLICIES ON CURRENT USERS GETS UNCOMMENTED
+# ^^^^ UNCOMMENT IF SETTING PASSWORD POLICIES ON CURRENT USERS GETS UNCOMMENTED (around line 130)
 
 # update apt repos and install package upgrades
 os.system("sudo apt update && sudo apt upgrade")
