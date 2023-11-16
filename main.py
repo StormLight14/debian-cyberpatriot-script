@@ -151,19 +151,15 @@ for user in users:
 """
 
 # check if any users are unauthorized on the system and ask whether to delete or not
-for auth_user in auth_users:
-    if auth_user != "DISABLED":
-        if auth_user not in u:
-            remove_user = input(f"Remove user {auth_user}? They are not in authorized_users.txt. WARNING: Double check before answering! (y/n) ").lower()
-            if remove_user == "y" or remove_user == "yes":
-                pass # remove user here
-            elif remove_user == "n" or remove_user == "no":
-                print("Not removing user.")
-            else:
-                print("Invalid input; defaulting to not removing user.")
-    else:
-        print("authorized-users.txt is set to DISABLED. Not checking users.")
-        break
+for user in users:
+    if user.is_authorized == False:
+        remove_user = input(f"Remove user {auth_user}? They are not in authorized_users.txt. WARNING: Double check before answering! (y/n) ").lower()
+        if remove_user == "y" or remove_user == "yes":
+            pass # remove user here
+        elif remove_user == "n" or remove_user == "no":
+            print("Not removing user.")
+        else:
+            print("Invalid input; defaulting to not removing user.")
 
 # ensure /etc/shadow has correct file permissions.
 # owner has rw, owner's group has r, all others have none.
