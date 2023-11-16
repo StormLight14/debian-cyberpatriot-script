@@ -112,12 +112,12 @@ except:
 users = []
 auth_users = []
 
-
+# awk -F':' '/sudo/{print $4}' /etc/group for getting list of users in sudo group
 # get all users on system and append to users list
 with open('/etc/passwd', 'r') as passwd_file:
     for line in passwd_file.readlines():
         if "/home/" in line: # only have actual users
-            users.append(line.split(":")[0]) # only take user's name from /etc/passwd
+            users.append(User(line.split(":")[0], false)) # args: user's name; is in group
 
 # read authorized_users.txt and append to auth_users list
 try:
@@ -138,7 +138,6 @@ for user in users:
 """
 
 # check if any users are unauthorized on the system and ask whether to delete or not
-# awk -F':' '/sudo/{print $4}' /etc/group for getting list of users in sudo group
 for auth_user in auth_users:
     if auth_user != "DISABLED":
         if auth_user not in auth_users:
