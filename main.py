@@ -22,12 +22,15 @@ os.system("sudo apt install unattended-upgrades")
 # install ufw (if it for some reason isnt installed already) and enable it
 os.system("sudo apt install ufw")
 os.system("sudo ufw enable")
+print("UFW is installed and enabled.")
 
 # disable root ssh login by replacing text in config
 os.system("sudo sed -i \"s/PermitRootLogin yes/PermitRootLogin no/g\" /etc/ssh/sshd_config")
+print("Disabled root login through SSH.")
 
-# update db for locate command
+# update db for locating files
 os.system("sudo updatedb")
+print("Updated file name database.")
 
 # search for media files, prompt whether to delete or not
 locate_output = (subprocess.getoutput("locate *.mp3") + "\n" + subprocess.getoutput("locate *.mp4") + "\n" + subprocess.getoutput("locate *.wav")).split("\n")
@@ -50,9 +53,27 @@ for file in locate_output:
 
 # disable anonymous ftp login
 os.system("sudo sed -i \"s/anonymous_enable=YES/anonymous_enable=NO/g\" /etc/vsftpd.conf")
+print("Disabled vsftpd anonymous_enable")
 
 # enable ssl for ftp
 os.system("sudo sed -i \"s/ssl_enable=NO/ssl_enable=YES/g\" /etc/vsftpd.conf")
+print("Enabled vsftpd ssl_enable")
 
-# set mininum password age
-print("todo")
+# set good password aging policies
+with open('/etc/login.defs', 'r') as file:
+    lines = file.readlines()
+    
+    # iterate through lines in login.defs
+    for i, line in enumerate(lines): 
+        if line.startswith("PASS_MAX_DAYS"):
+            lines[i] = "PASS_MAX_DAYS 90\n"
+        elif line.startswith("PASS_MIN_DAYS"):
+            lines[i] = "PASS_MIN_DAYS 7\n"
+        elif line.startswith("PASS_WARN_AGE"):
+            lines[i] = "PASS_WARN_AGE 5\n"
+
+    # write changes to login.defs
+    with open('/etc/login.defs', 'w') as file:
+        file.writelines(lines)
+
+print("Set system password aging policies.")
