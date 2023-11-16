@@ -124,3 +124,5 @@ for user in users:
 print("Set system password aging policies for current users.")
 
 # check if any users are unauthorized on the system and ask whether to delete or not
+with open('./authorized-users.txt', 'r') as authorized_users:
+    print(authorized_users)
