@@ -1,2 +1,7 @@
 DISABLED
-Remember to add both administrators and normal users to this list, and delete these first two lines.
+Add all authorized users, one line per user. Delete these first two lines before running script.
+
+ADMINS:
+
+NORMAL_USERS:
+

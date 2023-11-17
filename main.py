@@ -112,33 +112,47 @@ except:
     print("ERROR: Failed to read/write /etc/login.defs")
 
 
-# get all users on system, and authorized users from authorized-users.txt.
 users = []
 
 # get all users on system and append to users list
 with open('/etc/passwd', 'r') as passwd_file:
     with open('authorized-users.txt', 'r') as authorized_users:
         auth_user_names = []
-        sudo_users = subprocess.getoutput("getent group sudo | awk -F: '{print $1 \":\" $NF}'") # list all sudo users
+        admin_user_names = []
+        
+        sudo_users = subprocess.getoutput("getent group sudo | awk -F: '{print $1 \":\" $NF}'")
+
+        read_mode = None # can be None, ADMINS, or NORMAL_USERS
         
         for line in authorized_users.readlines():
             if line.strip() == "DISABLED":
                 auth_user_names.append("DISABLED")
                 break
-            auth_user_names.append(line.strip())
+            elif "ADMINS" in line.strip():
+                read_mode = "ADMINS"
+            elif "NORMAL_USERS" in line.strip():
+                read_mode = "NORMAL_USERS"
+
+            if read_mode:
+                auth_user_names.append(line.strip())
+                if read_mode == "ADMINS":
+                    admin_user_names.append(line.strip())
             
         for line in passwd_file.readlines():
             if "/home/" in line: # only have actual users
                 user_name = line.split(":")[0]
                 user_is_authed = False
+                user_is_admin = False
                 user_has_sudo = False
 
                 if user_name in auth_user_names or auth_user_names[0] == "DISABLED":
                     user_is_authed = True
+                if user_name in admin_user_names:
+                    user_is_admin = True
                 if user_name in sudo_users:
                     user_has_sudo = True
 
-                users.append(User(user_name, user_is_authed, user_has_sudo))
+                users.append(User(user_name, user_is_authed, user_is_admin, user_has_sudo))
 
 
 # set good password aging policies for current users
@@ -163,7 +177,7 @@ for user in users:
         else:
             print("Invalid input; defaulting to not removing user.")
 
-    if user.has_sudo:
+    if user.has_sudo and user.is_admin == False:
         remove_sudo = input(f"Remove user {user.username} from sudo group? Check the administrator list. (y/n)").lower()
         if remove_sudo == "y" or remove_sudo == "yes":
             os.system(f"sudo deluser {user.username} sudo")
