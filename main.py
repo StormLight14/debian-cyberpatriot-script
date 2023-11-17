@@ -15,15 +15,16 @@ if subprocess.getoutput("whoami") != "root":
         print("Exiting.")
         exit()
 
-# main_user = input("Who is the main user? (ex: perry in the training rounds): ")
-# ^^^^ UNCOMMENT IF SETTING PASSWORD POLICIES ON CURRENT USERS GETS UNCOMMENTED (around line 130)
+# main_user = input("What user are you logged in as? ")
 
 # update apt repos and install package upgrades
 os.system("sudo apt update && sudo apt upgrade")
 
-# install unattended-upgrades and enable auto update
+# enable auto update
 os.system("sudo apt install unattended-upgrades")
-# !TODO!
+os.system("sudo dpkg-reconfigure -plow unattended-upgrades") # open interactive CLI for enabling unattended-upgrades.
+os.system("sudo sed -i \"s/Update-Package-Lists \"0\"/Update-Package-Lists \"1\"/g\" /etc/apt/apt.conf.d/10periodic")
+print("Enabled auto updates.")
 
 # install and enable ufw
 os.system("sudo apt install ufw")
