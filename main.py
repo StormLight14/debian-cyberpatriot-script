@@ -82,7 +82,11 @@ print("Enabled sudo requiring authentication.\nWARNING: Double check /etc/sudoer
 # remember previous passwords and extra dictionary-based strength tests added
 try:
     with open("/etc/pam.d/common-password", "a+") as common_password_file:
-        common_password_file.write("\npassword requisite pam_pwquality.so\n")
+        if "pam_pwquality" not in common_password_file.read():
+            common_password_file.write("\npassword requisite pam_pwquality.so\n")
+        if "pam_unix.so" not in common_password_file.read():
+            common_password_file.write("\npassword required pam_unix.so remember=5\n")
+
         print("Set better password strength (Extra dictionary-based checks)")
         print("Set setting for remembering past passwords.")
         print("WARNING: Please check /etc/pam.d/common-password for any conflicts this may have made.")
