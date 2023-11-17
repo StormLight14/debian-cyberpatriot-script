@@ -23,7 +23,7 @@ os.system("sudo apt update && sudo apt upgrade")
 # enable auto update
 os.system("sudo apt install unattended-upgrades")
 os.system("sudo dpkg-reconfigure -plow unattended-upgrades") # open interactive CLI for enabling unattended-upgrades.
-os.system("sudo sed -i \"s/Update-Package-Lists \"0\"/Update-Package-Lists \"1\"/g\" /etc/apt/apt.conf.d/10periodic")
+os.system("sudo sed -i \"s/Update-Package-Lists \\"0\\"/Update-Package-Lists \\"1\\"/g\" /etc/apt/apt.conf.d/10periodic")
 print("Enabled auto updates.")
 
 # install and enable ufw
