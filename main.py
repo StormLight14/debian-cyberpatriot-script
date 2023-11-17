@@ -79,11 +79,14 @@ print("Enabled vsftpd ssl_enable")
 os.system("sudo sed -i \"s/!authenticate/authenticate/g\" /etc/sudoers")
 print("Enabled sudo requiring authentication.\nWARNING: Double check /etc/sudoers anyway.")
 
-# remember previous passwords and extra dictionary-based strength tests added
 common_password_str = ""
+
+# save contents of common-password to a variable
 with open("/etc/pam.d/common-password", 'r') as common_password_file:
     common_password_str = common_password_file.read()
 
+# remember previous passwords and extra dictionary-based strength tests added
+# TODO: make it not duplicate the settings.. I CANT FIGURE OUT WHY IT IS ANYWAY
 try:
     with open("/etc/pam.d/common-password", "a") as common_password_file:
         if "pam_pwquality.so" not in common_password_str:
