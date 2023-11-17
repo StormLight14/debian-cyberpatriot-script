@@ -80,15 +80,15 @@ os.system("sudo sed -i \"s/!authenticate/authenticate/g\" /etc/sudoers")
 print("Enabled sudo requiring authentication.\nWARNING: Double check /etc/sudoers anyway.")
 
 # remember previous passwords and extra dictionary-based strength tests added
-common_password_lines = []
+common_password_str = ""
 with open("/etc/pam.d/common-password", 'r') as common_password_file:
-    common_password_lines = common_password_file.readlines()
+    common_password_str = common_password_file.read()
 
 try:
     with open("/etc/pam.d/common-password", "a") as common_password_file:
-        if "pam_pwquality.so" not in common_password_lines:
+        if "pam_pwquality.so" not in common_password_str:
             common_password_file.write("\npassword requisite pam_pwquality.so\n")
-        if "pam_unix.so remember" not in common_password_lines:
+        if "pam_unix.so remember" not in common_password_str:
             common_password_file.write("\npassword required pam_unix.so remember=5\n")
 
         print("Set better password strength (Extra dictionary-based checks)")
