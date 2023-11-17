@@ -86,7 +86,7 @@ with open("/etc/pam.d/common-password", 'r') as common_password_file:
     common_password_str = common_password_file.read()
 
 # remember previous passwords and extra dictionary-based strength tests added
-# TODO: make it not duplicate the settings.. I CANT FIGURE OUT WHY IT IS ANYWAY
+# TODO: make it not duplicate the settings.. I CANT FIGURE OUT WHY IT IS DUPLICATING ANYWAY ARGHHHHHHHHHHHH
 try:
     with open("/etc/pam.d/common-password", "a") as common_password_file:
         if "pam_pwquality.so" not in common_password_str:
