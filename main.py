@@ -125,21 +125,23 @@ with open('/etc/passwd', 'r') as passwd_file:
         read_mode = None # can be None, ADMINS, or NORMAL_USERS
         
         for line in authorized_users.readlines():
-            if line.strip() == "DISABLED":
-                auth_user_names.append("DISABLED")
-                break
-            elif "ADMINS" in line.strip():
-                read_mode = "ADMINS"
-            elif "NORMAL_USERS" in line.strip():
-                read_mode = "NORMAL_USERS"
+            if line.strip() != "":
+                if line.strip() == "DISABLED":
+                    auth_user_names.append("DISABLED")
+                    break
+                elif "ADMINS" in line.strip():
+                    read_mode = "ADMINS"
+                elif "NORMAL_USERS" in line.strip():
+                    read_mode = "NORMAL_USERS"
 
-            if read_mode:
-                auth_user_names.append(line.strip())
+                if read_mode == "NORMAL_USERS":
+                    auth_user_names.append(line.strip())
                 if read_mode == "ADMINS":
+                    auth_user_names.append(line.strip())
                     admin_user_names.append(line.strip())
             
         for line in passwd_file.readlines():
-            if "/home/" in line: # only have actual users
+            if "/home/" in line: # have mostly actual users
                 user_name = line.split(":")[0]
                 user_is_authed = False
                 user_is_admin = False
