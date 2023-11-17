@@ -189,7 +189,7 @@ for user in users:
             print(f"Did not remove {user.username} from sudo.")
 
 # ensure /etc/shadow has correct file permissions.
-# owner has rw, owner's group has r, all others have none.
+# owner has rw perms, owner's group has r perms, all others have no perms.
 os.system("sudo chmod 640 /etc/shadow")
 
 # ask user whether to disable ipv4 forwarding or not
