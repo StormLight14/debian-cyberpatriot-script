@@ -28,6 +28,7 @@ os.system(
 os.system(
     'sudo sed -i "s/Update-Package-Lists \\"0\\"/Update-Package-Lists \\"1\\"/g" /etc/apt/apt.conf.d/10periodic'
 )  # daily updates
+print("WARNING: May need to manually change what updates you get. (Example: Security Only to Security & Recommended)")
 print("Enabled auto updates.")
 
 # install and enable ufw
