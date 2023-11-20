@@ -5,8 +5,18 @@ import subprocess
 
 from user import User
 
+def print_color(text, type):
+    color = '\033[0m'
+
+    if type.lower() == "warning":
+        color = '\033[93m'
+    elif type.lower() == "error":
+        color = '\033[91m'
+
+    print(f"{color} {text} \033[0m")
+
 if subprocess.getoutput("whoami") != "root":
-    print("WARNING: You are not running this script as root.")
+    print_color("WARNING: You are not running this script as root.", "warning")
     run_anyway = input("Run script anyway? (y/n) ").lower()
 
     if run_anyway == "y" or run_anyway == "yes":
@@ -28,7 +38,7 @@ os.system(
 os.system(
     'sudo sed -i "s/Update-Package-Lists \\"0\\"/Update-Package-Lists \\"1\\"/g" /etc/apt/apt.conf.d/10periodic'
 )  # daily updates
-print("WARNING: May need to manually change what updates you get. (Example: Security Only to Security & Recommended)")
+print_color("WARNING: May need to manually change what updates you get. (Example: Security Only to Security & Recommended)", "warning")
 print("Enabled auto updates.")
 
 # install and enable ufw
@@ -91,7 +101,7 @@ print("Enabled vsftpd ssl_enable")
 # require sudo to authenticate
 os.system('sudo sed -i "s/!authenticate/authenticate/g" /etc/sudoers')
 print("Enabled sudo requiring authentication.")
-print("WARNING: Double check /etc/sudoers.")
+print_color("WARNING: Double check /etc/sudoers.", "warning")
 
 common_password_str = ""
 
@@ -110,11 +120,9 @@ try:
 
         print("Set better password strength (Extra dictionary-based checks)")
         print("Set setting for remembering past passwords.")
-        print(
-            "WARNING: Please check /etc/pam.d/common-password for any conflicts this may have made."
-        )
+        print_color("WARNING: Please check /etc/pam.d/common-password for any conflicts this may have made.", "warning")
 except:
-    print("ERROR: Failed to edit /etc/pam.d/common-password; it may not exist.")
+    print_color("ERROR: Failed to edit /etc/pam.d/common-password; it may not exist.", "warning")
 
 users = []
 
@@ -133,6 +141,7 @@ with open("/etc/passwd", "r") as passwd_file:
         for line in authorized_users.readlines():
             if line.strip() != "":
                 if line.strip() == "DISABLED":
+                    print_color("WARNING: authorized-users.txt is set to DISABLED. Stop the script if this isn't the intended behavior.", "warning")
                     auth_user_names.append("DISABLED")
                     break
                 elif "ADMINS" in line.strip():
@@ -184,7 +193,7 @@ try:
         print("Set system password aging policies for future users.")
 
 except:
-    print("ERROR: Failed to read/write /etc/login.defs")
+    print_color("ERROR: Failed to read/write /etc/login.defs", "error")
 
 # set good password aging policies for current users
 """ DISABLED UNTIL FIXED, because I ended up soft locking sudo authentication after running it...
