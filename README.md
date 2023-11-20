@@ -9,3 +9,7 @@ If the README file on the image has a list of authorized users, clear the `autho
 If the script asks for a "main user", that just is whatever one the image has you logged in as.
 
 ALSO to other teams who see this: don't be lazy and make your own script smh
+
+## Todo
+- [ ] Colored Text (Errors, Warnings)
+- [ ] Some other things probably
