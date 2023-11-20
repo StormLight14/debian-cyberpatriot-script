@@ -90,9 +90,8 @@ print("Enabled vsftpd ssl_enable")
 
 # require sudo to authenticate
 os.system('sudo sed -i "s/!authenticate/authenticate/g" /etc/sudoers')
-print(
-    "Enabled sudo requiring authentication.\nWARNING: Double check /etc/sudoers anyway."
-)
+print("Enabled sudo requiring authentication.")
+print("WARNING: Double check /etc/sudoers.")
 
 common_password_str = ""
 
