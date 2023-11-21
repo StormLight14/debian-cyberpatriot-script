@@ -9,5 +9,5 @@ If the README file on the image has a list of authorized users, fill out the `au
 If the script asks for a "main user", that just is whatever one the image has you logged in as.
 
 ## Todo
-- [ ] Colored Text (Errors, Warnings)
+- [x] Colored Text (Errors, Warnings)
 - [ ] Some other things probably
