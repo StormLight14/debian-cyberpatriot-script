@@ -9,11 +9,12 @@ If the README file on the image has a list of authorized users, fill out the `au
 If the script asks for a "main user", that just is whatever one the image has you logged in as.
 
 ## Todo
+- [ ] Ask user for required services (FTP, SSH, CUPS/printing, etc.)
 - [x] Colored Text (Errors, Warnings)
 - [x] Update repos and packages with `apt`
 - [x] Enable Auto Updates
 - [x] Install/Enable UFW
-- [x] Install/Enable SSH (if required)
+- [x] Install/Enable SSH.
 - [x] Disable root SSH login
 - [x] Update file names database
 - [x] Delete unwanted media files
@@ -24,5 +25,8 @@ If the script asks for a "main user", that just is whatever one the image has yo
 - [x] Remove unauthorized users
 - [x] Remove non-admins from `sudo` group
 - [x] Ensure `/etc/shadow` has secure permissions on it
-- [x] Disable IPv4 forwarding, if required.
+- [ ] Ensure `~/.bash_history` has secure permissions on it
+- [x] Disable IPv4 forwarding.
+- [ ] Lock root user account.
+- [ ] Remove unwanted/hacking software.
 - [ ] Some other things probably
