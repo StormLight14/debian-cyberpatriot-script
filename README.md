@@ -9,7 +9,7 @@ If the README file on the image has a list of authorized users, fill out the `au
 If the script asks for a "main user", that just is whatever one the image has you logged in as.
 
 ## Todo
-- [ ] Ask user for required services (FTP, SSH, CUPS/printing, etc.)
+- [ ] Ask user for required services (FTP, SSH, cups (for printing), etc.)
 - [x] Colored Text (Errors, Warnings)
 - [x] Update repos and packages with `apt`
 - [x] Enable Auto Updates
