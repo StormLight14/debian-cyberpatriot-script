@@ -19,7 +19,7 @@ if subprocess.getoutput("whoami") != "root":
     print_color("WARNING: You are not running this script as root.", "warning")
     run_anyway = input("Run script anyway? (y/n) ").lower()
 
-    if run_anyway == "y" or run_anyway == "yes":
+    if run_anyway == "y":
         print("Running script.")
     else:
         print("Exiting.")
@@ -27,6 +27,17 @@ if subprocess.getoutput("whoami") != "root":
 
 # main_user = input("What user are you logged in as? ")
 
+required_services = []
+
+if input("Is FTP required? (y/n").lower() == "y":
+    required_services.append("ftp")
+if input("Is SSH required? (y/n").lower() == "y":
+    required_services.append("ssh")
+if input("Is CUPS required (printing)? (y/n").lower() == "y":
+    required_services.append("cups")
+if input("Are media files allowed? (y/n").lower() == "y":
+    required_services.append("media")
+    
 # update apt repos and install package upgrades
 os.system("sudo apt update && sudo apt upgrade")
 
@@ -48,7 +59,7 @@ print("UFW is installed and enabled.")
 
 # install, start and enable ssh
 enable_ssh = input("Enable SSH? (y/n) ").lower()
-if enable_ssh == "y" or enable_ssh == "yes":
+if enable_ssh == "y":
     os.system("sudo apt install openssh-server")
     os.system("sudo systemctl enable sshd")
     os.system("sudo systemctl start sshd")
@@ -211,10 +222,10 @@ for user in users:
         remove_user = input(
             f"Remove user {user.username}? They are not in authorized_users.txt. WARNING: Double check before answering! (y/n) "
         ).lower()
-        if remove_user == "y" or remove_user == "yes":
+        if remove_user == "y":
             os.system(f"sudo userdel {user.username}")
             print(f"Removed user {user.username}")
-        elif remove_user == "n" or remove_user == "no":
+        elif remove_user == "n:
             print("Not removing user.")
         else:
             print("Invalid input; defaulting to not removing user.")
@@ -223,7 +234,7 @@ for user in users:
         remove_sudo = input(
             f"Remove user {user.username} from sudo group? Check the administrator list. (y/n)"
         ).lower()
-        if remove_sudo == "y" or remove_sudo == "yes":
+        if remove_sudo == "y":
             os.system(f"sudo deluser {user.username} sudo")
             print(f"Removed {user.username} from sudo group.")
         else:
@@ -237,7 +248,7 @@ os.system("sudo chmod 640 /etc/shadow")
 disable_ip_forward = input(
     "Disable IPv4 Forwarding? You can always change this later in /etc/sysctl.conf (y/n) "
 ).lower()
-if disable_ip_forward == "y" or disable_ip_forward == "yes":
+if disable_ip_forward == "y":
     os.system(
         'sudo sed -i "s/net.ipv4.ip_forward=1/net.ipv4.ip_forward=0/g" /etc/sysctl.conf'
     )
