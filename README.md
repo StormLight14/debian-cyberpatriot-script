@@ -21,12 +21,13 @@ If the script asks for a "main user", that just is whatever one the image has yo
 - [x] Disable anonymous FTP login
 - [x] Enable SSL for FTP
 - [x] Make `sudo` require authentication
+- [ ] Encrypt passwords
 - [x] Set good password policies (only applies to users created in the future)
 - [x] Remove unauthorized users
 - [x] Remove non-admins from `sudo` group
-- [x] Ensure `/etc/shadow` has secure permissions on it
-- [ ] Ensure `~/.bash_history` has secure permissions on it
+- [ ] Ensure `/etc/shadow`, `~/.bash_history`, and `/etc/samba/smbpasswd` have secure permissions.
 - [x] Disable IPv4 forwarding.
 - [ ] Lock root user account.
 - [ ] Remove unwanted/hacking software.
+- [ ] Organize everything (impossible)
 - [ ] Some other things probably
