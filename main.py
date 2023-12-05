@@ -243,6 +243,7 @@ for user in users:
 # ensure /etc/shadow has correct file permissions.
 # owner has rw perms, owner's group has r perms, all others have no perms.
 os.system("sudo chmod 640 /etc/shadow")
+os.system("sudo chmod 640 ~/.bash_history")
 
 # ask user whether to disable ipv4 forwarding or not
 disable_ip_forward = input(
