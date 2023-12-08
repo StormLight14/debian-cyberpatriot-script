@@ -58,61 +58,71 @@ os.system("sudo ufw enable")
 print("UFW is installed and enabled.")
 
 # install, start and enable ssh
-enable_ssh = input("Enable SSH? (y/n) ").lower()
-if enable_ssh == "y":
+if "ssh" in required_services:
     os.system("sudo apt install openssh-server")
     os.system("sudo systemctl enable sshd")
     os.system("sudo systemctl start sshd")
-else:
-    print("Not enabling SSH.")
 
-# disable root ssh login by replacing text in config
-os.system(
-    'sudo sed -i "s/PermitRootLogin yes/PermitRootLogin no/g" /etc/ssh/sshd_config'
-)
-print("Disabled root login through SSH.")
+    # disable root ssh login by replacing text in config
+    os.system(
+        'sudo sed -i "s/PermitRootLogin yes/PermitRootLogin no/g" /etc/ssh/sshd_config'
+    )
+    print("Disabled root login through SSH.")
+else:
+    os.system("sudo systemctl disable openssh")
 
 # update db for locating files
 os.system("sudo updatedb")
 print("Updated file name database.")
 
-# search for media files, prompt whether to delete or not
-locate_output = (
-    subprocess.getoutput("locate *.mp3")
-    + "\n"
-    + subprocess.getoutput("locate *.mp4")
-    + "\n"
-    + subprocess.getoutput("locate *.wav")
-).split("\n")
-for file in locate_output:
-    if file != "":
-        should_delete = input(f"Delete media file {file}? (y/n/stop) ").lower()
-        if should_delete == "y":
-            try:
-                print("Deleted media file.")
-                os.remove(file)
-            except:
-                print("Failed to delete media file, please try doing it manually.")
-        elif should_delete == "stop" or should_delete == "s":
-            print("Stopped going through media files.")
-            break
-        elif should_delete == "n":
-            print("Did not delete media file.")
-        else:
-            print("Invalid input; defaulted to not deleting.")
+if "media" not in required_services:
+    # search for media files, prompt whether to delete or not
+    locate_output = (
+        subprocess.getoutput("locate *.mp3")
+        + "\n"
+        + subprocess.getoutput("locate *.mp4")
+        + "\n"
+        + subprocess.getoutput("locate *.wav")
+        + "\n"
+        + subprocess.getoutput("locate *.flac")
+    ).split("\n")
+    for file in locate_output:
+        if file != "":
+            should_delete = input(f"Delete media file {file}? (y/n/stop) ").lower()
+            if should_delete == "y":
+                try:
+                    print("Deleted media file.")
+                    os.remove(file)
+                except:
+                    print("Failed to delete media file, please try doing it manually.")
+            elif should_delete == "stop" or should_delete == "s":
+                print("Stopped going through media files.")
+                break
+            elif should_delete == "n":
+                print("Did not delete media file.")
+            else:
+                print("Invalid input; defaulted to not deleting.")
 
-# disable anonymous ftp login
-os.system('sudo sed -i "s/anonymous_enable=YES/anonymous_enable=NO/g" /etc/vsftpd.conf')
-print("Disabled vsftpd anonymous_enable")
+if "ftp" in required_services:
+    # disable anonymous ftp login
+    os.system('sudo sed -i "s/anonymous_enable=YES/anonymous_enable=NO/g" /etc/vsftpd.conf')
+    print("Disabled vsftpd anonymous_enable")
+    
+    # enable ssl for ftp
+    os.system('sudo sed -i "s/ssl_enable=NO/ssl_enable=YES/g" /etc/vsftpd.conf')
+    print("Enabled vsftpd ssl_enable")
+    
+    # require sudo to authenticate
+    os.system('sudo sed -i "s/!authenticate/authenticate/g" /etc/sudoers')
+    print("Enabled sudo requiring authentication.")
+    print_color("WARNING: Double check /etc/sudoers.", "warning")
+else:
+    os.system("sudo systemctl disable vsftpd")
 
-# enable ssl for ftp
-os.system('sudo sed -i "s/ssl_enable=NO/ssl_enable=YES/g" /etc/vsftpd.conf')
-print("Enabled vsftpd ssl_enable")
-
-# require sudo to authenticate
-os.system('sudo sed -i "s/!authenticate/authenticate/g" /etc/sudoers')
-print("Enabled sudo requiring authentication.")
-print_color("WARNING: Double check /etc/sudoers.", "warning")
+if "cups" in required_services:
+    pass
+else:
+    os.system("sudo systemctl disable cups")
 
 common_password_str = ""
 
