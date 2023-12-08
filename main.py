@@ -29,13 +29,13 @@ if subprocess.getoutput("whoami") != "root":
 
 required_services = []
 
-if input("Is FTP required? (y/n").lower() == "y":
+if input("Is FTP required? (y/n) ").lower() == "y":
     required_services.append("ftp")
-if input("Is SSH required? (y/n").lower() == "y":
+if input("Is SSH required? (y/n) ").lower() == "y":
     required_services.append("ssh")
-if input("Is CUPS required (printing)? (y/n").lower() == "y":
+if input("Is CUPS required (printing)? (y/n) ").lower() == "y":
     required_services.append("cups")
-if input("Are media files allowed? (y/n").lower() == "y":
+if input("Are media files allowed? (y/n) ").lower() == "y":
     required_services.append("media")
     
 # update apt repos and install package upgrades
