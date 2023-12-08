@@ -21,6 +21,7 @@ If the script asks for a "main user", that just is whatever one the image has yo
 - [x] Disable anonymous FTP login
 - [x] Enable SSL for FTP
 - [x] Make `sudo` require authentication
+- [ ] Encrypt passwords
 - [x] Set good password policies (only applies to users created in the future)
 - [x] Remove unauthorized users
 - [x] Remove non-admins from `sudo` group
