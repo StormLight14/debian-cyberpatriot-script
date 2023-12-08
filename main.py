@@ -235,7 +235,7 @@ for user in users:
         if remove_user == "y":
             os.system(f"sudo userdel {user.username}")
             print(f"Removed user {user.username}")
-        elif remove_user == "n:
+        elif remove_user == "n":
             print("Not removing user.")
         else:
             print("Invalid input; defaulting to not removing user.")
