@@ -25,9 +25,8 @@ If the script asks for a "main user", that just is whatever one the image has yo
 - [x] Set good password policies (only applies to users created in the future)
 - [x] Remove unauthorized users
 - [x] Remove non-admins from `sudo` group
-- [x] Ensure `/etc/shadow` has secure permissions on it
-- [ ] Ensure `~/.bash_history` has secure permissions on it
+- [x] Ensure `/etc/shadow` and `~/.bash_history` have secure file permissions.
 - [x] Disable IPv4 forwarding.
-- [ ] Lock root user account.
 - [ ] Remove unwanted/hacking software.
+- [ ] Organize everything (impossible)
 - [ ] Some other things probably
